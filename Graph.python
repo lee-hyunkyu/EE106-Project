@@ -1,0 +1,23 @@
+class Node:
+    def __init__(self, name, index):
+        self._name  = name 
+        self._index = index
+
+class Edge:
+    def __init__(self, length, node1, node2)
+        self._length = length 
+        self._node1  = node1 
+        self._node2  = node2
+
+class Graph: 
+    def __init__(self, V, E):
+        self._V = V # Dictionary of {Name:Node}
+        self._E = E # 2D Dictionary. 
+        '''
+        if (u, v) is an edge
+        {
+            {Name of U: Node V}
+            {Name of V: Node}
+        }
+        '''
+
