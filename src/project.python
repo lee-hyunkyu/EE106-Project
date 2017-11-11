@@ -48,4 +48,3 @@ def is_node(homograph):
         return True 
     Case 4: No corner (0 corners)
         return False
-    
