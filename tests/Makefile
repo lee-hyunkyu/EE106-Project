@@ -1,2 +1,2 @@
 graph:
-	python graph_tests.python
+	python graph_tests.py
