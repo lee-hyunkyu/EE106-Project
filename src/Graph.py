@@ -3,6 +3,13 @@ class Node:
         self._name  = name 
         self._index = index # Based only on when added to Graph
 
+    @property
+    def name(self):
+        return self._name
+    @property
+    def index(self):
+        return self._index
+
 class Edge:
     def __init__(self, length, node1, node2):
         self._length = length 
@@ -21,6 +28,16 @@ class Graph:
             _E[u.index][v.index] = None
         '''
         self._E = E # 2D Dictionary. 
+
+    @property
+    def nextIndex(self):
+        return self._nextIndex
+    @property
+    def V(self):
+        return self._V
+    @property
+    def E(self):
+        return self._E
 
     def add_node(self, node):
         pass
