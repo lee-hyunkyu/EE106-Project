@@ -4,7 +4,7 @@ class Node:
         self._index = index # Based only on when added to Graph
 
 class Edge:
-    def __init__(self, length, node1, node2)
+    def __init__(self, length, node1, node2):
         self._length = length 
         self._node1  = node1 
         self._node2  = node2
