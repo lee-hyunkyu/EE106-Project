@@ -16,16 +16,26 @@ class Edge:
         self._node1  = node1 
         self._node2  = node2
 
+    @property
+    def length(self):
+        return self._lengths
+    @property
+    def node1(self):
+        return self._node1s
+    @property
+    def node2(self):
+        return self._node2s
+
 class Graph: 
     def __init__(self, V=[], E={}, nextIndex=0):
         self._nextIndex = nextIndex
-        self._V = V # Dictionary of {Name:Node}
+        self._V = V # Dictionary of {Index:Node}
 
         '''
         if (u, v) is an edge
             _E[u.index][v.index] = E
         else
-            _E[u.index][v.index] = None
+            _E[u.index][v.index] = E with length 0 or None
         '''
         self._E = E # 2D Dictionary. 
 
@@ -40,16 +50,26 @@ class Graph:
         return self._E
 
     def add_node(self, node):
-        pass
+        self.V[node.index]  = node
+        self.nextIndex      += 1
 
-    def add_edge(self, node1, node2):
-        pass
+    def add_edge(self, node1, node2, length):
+        self.E[node1.index][node2.index] = Edge(length, node1, node2)
+        self.E[node2.index][node1.index] = Edge(length, node2, node1)
+
+    def remove_edge(self, node1, node2):
+        self.E[node1.index][node2.index] = Edge(0, node1, node2)
+        self.E[node2.index][node1.index] = Edge(0, node2, node1)
 
     def get_neighbors(self, node):
-        pass
+        neighbors = []
+        for edge in self.E[node.index]:
+            if edge.length > 0:
+                neighbors += edge.node2
+        return neighbors
 
     def get_edge(self, node1, node2):
-        pass
+        return self.E[node1.index][node2.index]
 
     def breadth_first_search(self):
         pass
