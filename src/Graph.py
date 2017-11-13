@@ -10,6 +10,15 @@ class Node:
     def index(self):
         return self._index
 
+    def __eq__(self, other):
+        return self.name == other.name and self.index == other.index
+
+    def __lt__(self, other):
+        return self.index < other.index
+
+    def __gt__(self, other):
+        return self.index > other.index
+
 class Edge:
     def __init__(self, length, node1, node2):
         self._length = length 
@@ -18,27 +27,32 @@ class Edge:
 
     @property
     def length(self):
-        return self._lengths
+        return self._length
     @property
     def node1(self):
-        return self._node1s
+        return self._node1
     @property
     def node2(self):
-        return self._node2s
+        return self._node2
+
+    def __eq__(self, other):
+        return other.length == self.length and other.node1 == self.node1 and other.node2 == self.node2
 
 class Graph: 
-    def __init__(self, V={}, E={}, v_names={}, nextIndex=0):
+    def __init__(self, V=None, E=None, v_names=None, nextIndex=0):
         self._nextIndex = nextIndex
-        self._V        = V          # Dictionary of {Index:Node} 
-        self._V_names  = v_names    # Dictionary of {Name :Node}
-
-        '''
-        if (u, v) is an edge
-            _E[u.index][v.index] = E
-        else
-            _E[u.index][v.index] = E with length 0 or None
-        '''
-        self._E = E # 2D Dictionary. 
+        if V is None:
+            self._V         = {}
+        else:
+            self._V         = V          # Dictionary of {Index:Node} 
+        if v_names is None:
+            self._V_names   = {}
+        else:
+            self._V_names   = v_names    # Dictionary of {Name :Node}
+        if E is None:
+            self._E         = []         
+        else:
+            self._E         = E          # List of Edge(u, v), u.index < v.index (always)
 
     @property
     def nextIndex(self):
@@ -62,22 +76,31 @@ class Graph:
         return node
 
     def add_edge(self, node1, node2, length):
-        self._E[node1.index][node2.index] = Edge(length, node1, node2)
-        self._E[node2.index][node1.index] = Edge(length, node2, node1)
+        if node1.index < node2.index:
+            self._E += [Edge(length, node1, node2)]
+        else:
+            self._E += [Edge(length, node2, node1)]
+        return self._E[-1] # The last added edge
 
     def remove_edge(self, node1, node2):
-        self._E[node1.index][node2.index] = Edge(0, node1, node2)
-        self._E[node2.index][node1.index] = Edge(0, node2, node1)
+        edge = self.get_edge(node1, node2)
+        self._E.remove(edge)
 
     def get_neighbors(self, node):
         neighbors = []
-        for edge in self.E[node.index]:
-            if edge.length > 0:
-                neighbors += edge.node2
+        for edge in self.E:
+            if node == edge.node1:
+                neighbors += [edge.node2]
+            elif node == edge.node2:
+                neighbors += [edge.node1]
         return neighbors
 
     def get_edge(self, node1, node2):
-        return self.E[node1.index][node2.index]
+        smaller_node = min(node1, node2)
+        larger_node  = max(node1, node2)
+        for edge, i in zip(self._E, range(len(self._E))) :
+            if edge.node1 is smaller_node and edge.node2 is larger_node:
+                return edge
 
     def get_node(self, name):
         return self._V_names.get(name)
@@ -90,3 +113,6 @@ class Graph:
 
     def find_min_path(self, node1, node2):
         pass
+
+if __name__ == '__main__':
+    a = Graph()
