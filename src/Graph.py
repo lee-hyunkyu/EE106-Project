@@ -1,7 +1,11 @@
 class Node:
-    def __init__(self, name, index):
+    def __init__(self, name, index, root=None):
         self._name  = name 
         self._index = index # Based only on when added to Graph
+        if root:
+            self._root  = root 
+        else:
+            self._root  = self
 
     @property
     def name(self):
@@ -9,6 +13,12 @@ class Node:
     @property
     def index(self):
         return self._index
+
+    @property
+    def root(self):
+        if self._root is not self:
+            return self._root.root()
+        return self
 
 class Edge:
     def __init__(self, length, node1, node2):
