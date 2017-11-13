@@ -16,7 +16,7 @@ class TestGraph(unittest.TestCase):
             self.assertTrue(node.index == i)
 
     def test_graph_initialization(self):
-        G = Graph({}, {}, 0)
+        G = Graph()
         self.assertTrue(len(G.V)     == 0)
         self.assertTrue(len(G.E)     == 0)
         self.assertTrue(G.nextIndex  == 0)
