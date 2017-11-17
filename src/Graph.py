@@ -68,8 +68,13 @@ class Graph:
     def V_names(self):
         return self._V_names
 
-    def add_node(self, name):
-        node                     = Node(name, self.nextIndex) 
+    # Pass in the name of the node or a node to add to the graph
+    def add_node(self, arg):
+        if isinstance(arg, Node):
+            node = arg
+        else:
+            name = arg
+            node                     = Node(name, self.nextIndex) 
         self._V[node.index]      = node
         self._V_names[node.name] = node
         self._nextIndex          += 1
