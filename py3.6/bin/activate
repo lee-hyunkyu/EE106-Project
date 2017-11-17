@@ -41,7 +41,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/Users/Shared/FinalProject/python3.6_environment"
+VIRTUAL_ENV="/Users/Shared/FinalProject/py3.6"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
@@ -78,6 +78,6 @@ if [ -n "${BASH-}" ] || [ -n "${ZSH_VERSION-}" ] ; then
     hash -r 2>/dev/null
 fi
 
-## Set PYTHONPATH
+project_dir="$(dirname "$VIRTUAL_ENV")"
 export OLD_PYTHONPATH="$PYTHONPATH"
-export PYTHONPATH="/Users/Shared/FinalProject/src/:/Users/Shared/FinalProject/tests"
+export PYTHONPATH="$project_dir/src/:$project_dir/tests"
