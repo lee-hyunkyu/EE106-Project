@@ -47,10 +47,13 @@ class Maze(Graph):
         find(node2) # Update all the values inside node2
         return root1
 
-    def add_node(self, name, index, parent, root):
-        pass
+    def add_node(self, name, parent=None, root=None):
+        node        = MazeNode(name, self.nextIndex, parent=parent, root=root)
+        super().add_node(node)
+        return node
 
     def add_edge(self, node1, node2, length):
         pass
 
-
+m = Maze()
+print(m.add_node('hello'))
