@@ -43,6 +43,18 @@ class Direction:
     def WEST(cls):
         return Direction(Direction.WEST_VAL)
 
+    # Returns the direction if one turned 90 degrees clockwise
+    def clockwise_turn_direction(self):
+        if self._dir is 1:
+            return Direction.EAST()
+        if self._dir is 2:
+            return Direction.SOUTH()
+        if self._dir is -1:
+            return Direction.WEST()
+        if self._dir is -2:
+            return Direction.NORTH()
+        return None
+
     def __eq__(self, other):
         return self.dir == other.dir
 
