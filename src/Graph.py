@@ -1,3 +1,45 @@
+class Direction:
+    # Represents a cardinal direction 
+    # 1: NORTH
+    # -1: SOUTH
+    # 2: EAST
+    # -2: WEST
+    NORTH_VAL   = 1
+    SOUTH_VAL   = -1
+    EAST_VAL    = 2
+    WEST_VAL    = -2
+
+    def __init__(self, dir):
+        self._dir = dir
+
+    def __str__(self):
+        if self._dir is 1:
+            return 'NORTH'
+        if self._dir is -1:
+            return 'SOUTH'
+        if self._dir is 2:
+            return 'EAST'
+        if self._dir is -2:
+            return 'WEST'
+        return 'INVALID'
+
+    def opposite_direction(self):
+        return Direction(-self._dir)
+
+    @classmethod
+    def NORTH():
+        return Direction(Direction.NORTH_VAL)
+    @classmethod
+    def SOUTH():
+        return Direction(Direction.SOUTH_VAL)
+    @classmethod
+    def EAST():
+        return Direction(Direction.EAST_VAL)
+    @classmethod
+    def WEST():
+        return Direction(Direction.WEST_VAL)
+
+
 class Node:
     def __init__(self, name, index):
         self._name  = name 
@@ -69,7 +111,7 @@ class Graph:
         return self._V_names
 
     # Pass in the name of the node or a node to add to the graph
-    def add_node(self, arg):
+    def add_node(self, arg=None):
         if isinstance(arg, Node):
             node = arg
         else:
