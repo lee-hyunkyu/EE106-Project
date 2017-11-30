@@ -1,39 +1,92 @@
-#!/usr/bin/env python
+# Maze Project
 
-# Path Finding
-# S is the node I'm starting from and is of type Node? 
-def create_graph(s): 
+## Path Finding 
+
+More formally: **Given a map, can a robot find a way out**. Suppose I have a simple map of nodes and edges. This is fairly trivial. However a problem comes up. If I'm a robot, how do I know which way is which? For example, supose I have the following. 
+
+~~~
+    /------ C1
+V   ------  C2
+    \-----  C3
+~~~
+
+If I'm at V, how do I know which path to go to get to C1? This is fairly simple, when making the connection from V -> C1, just remember to tell V which directino C1 was in. **Not Relative** but with absolute coordinates (i.e. North/South/etc)
+
+And from there, it's just a series of NORTH -> SOUTH -> WEST -> etc. directions and the robot has to follow that. 
+
+## Maze Building
+
+So this is directly related to the path finding. In pseudocode, here it is:
+
+~~~
+# Creates a graph using DFS search starting from robot's current position
+def create_graph_dfs(robot, v=None): 
+
+    # Initialization
     reset encoder value
-    Assume one direction forward in the very beginning!
-    Go forward until another node is found
 
+    # Initialize graph if necessary
+    if not node:
+        g = Graph()
+        v = g.add_node() # No name but an index is automatically given
 
-    edge_length = read encoder value
-    if node is found: 
-        create_new_node s_ # The robot is currently at s_
-        create edge from s to s_ of length edge_length 
-        turn left 
-        left    = create_graph(s_)
-        turn right 
-        right   = create_graph(s_)
-        turn forward
-        forward = create_graph(s_)
+    directions = v.determine_possible_directions()
+    # Deadend has been reached
+    if len(direction) == 0: 
+        robot.turn_around()
+        robot.move_until_node_reached()
+        return None
+    if end has been reached: 
+        return 'Complete'
 
-    go back to s 
-    '''
-    I need to return to where I came from! 
-    So the assumption after each create create_graph(t) is that I am back at t
-    So after each create_graph (s_) I'm back at s_
-    So to return back to s is to just make a 180' and go backward
-    '''
+    entering_heading = robot.heading # Heading when robot entered the node
+    opposite_of_entering_heading = opposite_heading(entering_heading)
 
-    return;
+    # The robot should be at v
+    for dir in directions:
+        if dir is current_heading.opposite(): # Makes sure it doesn't go backward
+            continue                          # The connection should already be made!!!
+        robot.turn(dir)
 
-'''
-The function here may be too complicated. In the create_graph, I do turn left/right and look forward. 
-I can simply look to see if there is a 'wall' in front of me or not. 
-This could simply be a check for corners. What we could do is color code the edges.? 
-'''
+        # Robot still at start node
+        robot.move_forward_until_node()
+        
+        # Robot now at a neighbor of v. Create correct connections
+        u = g.add_node()
+        v.neighbor[dir] = u
+        u.neighbor[opposite_dir] = v
+
+        # Recursive call
+        done = create_graph_dfs(robot, u)
+        if done == 'Complete':
+            return g
+
+        # Robot should still be at the neighbor of v (u)
+        # Now I have to return to v
+        robot.turn(dir.opposite_direction())
+        robot.move_forward_until_node()
+    return g
+~~~
+
+### Finding nodes
+
+I refeer to some functions above. Here is how I might go about implementing them.
+
+~~~
+# returns all possible directions you could go from NODE (including backward)
+def determine_possible_directions(node):
+
+~~~
+
+## Robot
+
+Robot needs some kind of understanding of heading. Without it, it won't know which direction it's facing (NORTH, SOUTH, EAST, WEST). This way, it can quickly orient itself. 
+
+A couple functions (i.e. turnLeft(), turnRight()) should be able to fix that. Or just ones that refer directory to the direction. (i.e. turn(direction) where direction = NORTH, SOUTH, EAST, WEST)
+
+The robot also must be the one to determine whether or not it is at a node
+
+~~~
 def is_node(homograph):
     detect corners via harris corner detection
     use homograph to detect distance b/w corners
@@ -48,3 +101,4 @@ def is_node(homograph):
         return True 
     Case 4: No corner (0 corners)
         return False
+~~~
