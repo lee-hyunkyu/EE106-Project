@@ -1,4 +1,6 @@
 from collections import *
+from PriorityQueue import *
+import numpy as np
 class Direction:
     # Represents a cardinal direction 
     # 1: NORTH
@@ -69,6 +71,10 @@ class Node:
         self._neighbors   = defaultdict(int) # {Direction: Node}
         self._is_end      = False
 
+        # The following properties are for Dijkstra's and Path Finding algorithms
+        self._distance    = None
+        self._prev        = None
+
     @property
     def name(self):
         return self._name
@@ -81,6 +87,16 @@ class Node:
     @property
     def is_end(self):
         return self._is_end
+    @property
+    def distance(self):
+        return self._distance
+    @property
+    def prev(self):
+        return self._prev
+
+    def reset_path_finding(self):
+        self._distance = None
+        self._prev     = None
 
     def set_as_end(self):
         self._is_end = True
@@ -105,10 +121,24 @@ class Node:
         return len(neighbors) == 1 # Can only go backwards
 
     def __eq__(self, other):
+        if self._distance and other._distance: # We're doing some kind of path finding
+            return self._distance == other._distance
         return self.index == other.index and self.neighbors == other.neighbors
 
     def __str__(self):
         return '{0}: {1}'.format(self.index, str(self.neighbors))
+
+    def __lt__(self, other):
+        return self._distance < other._distance
+    def __gt__(self, other):
+        return self._distance > other._distance
+    def __ge__(self, other):
+        return self._distance >= other._distance
+    def __le__(self, other):
+        return self._distance <= other._distance
+
+    def __hash__(self):
+        return self.index
 
 class Graph: 
     def __init__(self, V=None, next_index=0):
@@ -117,6 +147,7 @@ class Graph:
             self._V      = V
         else:
             self._V      = {} # Annoying quirk of python forces this check
+                              # {Index: Node}
 
     @property
     def nextIndex(self):
@@ -144,10 +175,34 @@ class Graph:
     def breadth_first_search(self):
         pass
 
-    def dijkstras(self):
-        pass
+    def dijkstras(self, u):
+        # Assumes distance between adjacent nodes is 1
+        nodes_to_visit = [u]
+        q = PriorityQueue()
 
-    def find_min_path(self, node1, node2):
+        for node in self.V.values():
+            node._distance = np.inf
+            node._prev     = None
+            q.add(node)
+        
+        u._distance = 0
+
+        while len(q):
+            u = q.pop()
+            for v in u.neighbors.values():
+                alternate_distance = u.distance + 1
+                if v.distance > alternate_distance:
+                    v._distance = alternate_distance
+                    v._prev = u
+                    q.heapify()
+
+        distances = {n: n.distance for n in self.V.values()}
+        prevs    = {n: n.prev for n in self.V.values()}
+
+        return distances, prevs
+
+
+    def find_min_path(self, u, v):
         pass
 
 if __name__ == '__main__':

@@ -265,12 +265,64 @@ class TestGraph(unittest.TestCase):
         self.assertTrue(n9.get_neighbor(south)   is 0)
         self.assertTrue(n9.get_neighbor(east)    is 0)
 
-
     # def test_breadth_first_search(self):
     #     pass
 
-    # def test_dijkstras(self):
-    #     pass
+    def test_dijkstras(self):
+        # Initialize graph
+        g = Graph()
+        n1 = g.add_node()
+        n2 = g.add_node()
+        n3 = g.add_node()
+        n4 = g.add_node()
+        n5 = g.add_node()
+        n6 = g.add_node()
+        n7 = g.add_node()
+        n8 = g.add_node()
+        n9 = g.add_node()
+        # Imagine a configuration similar to a telephone numpad
+        north = Direction.NORTH()
+        east  = Direction.EAST()
+        south = Direction.SOUTH()
+        west  = Direction.WEST()
+        n1.add_neighbor(n2, east)
+        n1.add_neighbor(n4, south)
+        n2.add_neighbor(n1, west)
+        n2.add_neighbor(n3, east)
+        n2.add_neighbor(n5, south)
+        n3.add_neighbor(n2, west)
+        n3.add_neighbor(n6, south)
+        n4.add_neighbor(n1, north)
+        n4.add_neighbor(n5, east)
+        n4.add_neighbor(n7, south)
+        n5.add_neighbor(n4, west)
+        n5.add_neighbor(n2, north)
+        n5.add_neighbor(n6, east)
+        n5.add_neighbor(n8, south)
+        n6.add_neighbor(n3, north)
+        n6.add_neighbor(n5, west)
+        n6.add_neighbor(n9, south)
+        n7.add_neighbor(n4, north)
+        n7.add_neighbor(n8, east)
+        n8.add_neighbor(n7, west)
+        n8.add_neighbor(n5, north)
+        n8.add_neighbor(n9, east)
+        n9.add_neighbor(n8, west)
+        n9.add_neighbor(n6, north)
+
+        # Run Dijkstra's
+        nodes = [n1, n2, n3, n4, n5, n6, n7, n8, n9]
+        distances, prevs = g.dijkstras(n1)
+        import pdb; pdb.set_trace()
+        self.assertTrue(distances[n1] == 0)
+        self.assertTrue(distances[n2] == 1)
+        self.assertTrue(distances[n3] == 2)
+        self.assertTrue(distances[n4] == 1)
+        self.assertTrue(distances[n5] == 2)
+        self.assertTrue(distances[n6] == 3)
+        self.assertTrue(distances[n7] == 2)
+        self.assertTrue(distances[n8] == 3)
+        self.assertTrue(distances[n9] == 4)
 
     # def test_find_min_path(self):
     #     pass
