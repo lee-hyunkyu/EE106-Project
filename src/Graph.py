@@ -1,3 +1,4 @@
+from collections import *
 class Direction:
     # Represents a cardinal direction 
     # 1: NORTH
@@ -58,12 +59,14 @@ class Direction:
     def __eq__(self, other):
         return self.dir == other.dir
 
+    def __hash__(self):
+        return self.dir
 
 class Node:
     def __init__(self, index, name=None):
         self._name  = name   # Not really important
         self._index = index  # Based only on when added to Graph
-        self._neighbors   = {} # {Direction: Node}
+        self._neighbors   = defaultdict(int) # {Direction: Node}
         self._is_end      = False
 
     @property
@@ -83,6 +86,21 @@ class Node:
         self._is_end = True
         return self
 
+    def get_neighbor(self, dir):
+        return self._neighbors[dir]
+
+    # Adds V as a neighbor of SELF
+    # You go from SELF to V by going in DIRECTION
+    # i.e. if V is north of SELF, DIRECTION == NORTH
+    def add_neighbor(self, v, direction):
+        # If it does not exist in the dict or the neighbor matches
+        if not self._neighbors[direction] or self._neighbors[direction] == v:
+            self._neighbors[direction] = v
+            v._neighbors[direction.opposite_direction()] = self
+            return True
+        else:
+            return False # A neighbor already exists. This shouldn't be possible
+
     def is_deadend(self):
         return len(neighbors) == 1 # Can only go backwards
 
@@ -93,9 +111,12 @@ class Node:
         return '{0}: {1}'.format(self.index, str(self.neighbors))
 
 class Graph: 
-    def __init__(self, V={}, next_index=0):
-        self._next_index = next_ndex
-        self._V         = V
+    def __init__(self, V=None, next_index=0):
+        self._next_index = next_index
+        if V:
+            self._V      = V
+        else:
+            self._V      = {} # Annoying quirk of python forces this check
 
     @property
     def nextIndex(self):
@@ -103,6 +124,9 @@ class Graph:
     @property
     def V(self):
         return self._V
+    @property
+    def next_index(self):
+        return self._next_index
 
     # Pass in the name of the node or a node to add to the graph
     def add_node(self):
