@@ -23,27 +23,36 @@ class Direction:
             return 'WEST'
         return 'INVALID'
 
+    @property
+    def dir(self):
+        return self._dir
+
     def opposite_direction(self):
         return Direction(-self._dir)
 
     @classmethod
-    def NORTH():
+    def NORTH(cls):
         return Direction(Direction.NORTH_VAL)
     @classmethod
-    def SOUTH():
+    def SOUTH(cls):
         return Direction(Direction.SOUTH_VAL)
     @classmethod
-    def EAST():
+    def EAST(cls):
         return Direction(Direction.EAST_VAL)
     @classmethod
-    def WEST():
+    def WEST(cls):
         return Direction(Direction.WEST_VAL)
+
+    def __eq__(self, other):
+        return self.dir == other.dir
 
 
 class Node:
-    def __init__(self, name, index):
-        self._name  = name 
-        self._index = index # Based only on when added to Graph
+    def __init__(self, index, name=None):
+        self._name  = name   # Not really important
+        self._index = index  # Based only on when added to Graph
+        self._neighbors   = {} # {Direction: Node}
+        self._is_end      = False
 
     @property
     def name(self):
@@ -51,106 +60,50 @@ class Node:
     @property
     def index(self):
         return self._index
+    @property
+    def neighbors(self):
+        return self._neighbors
+    @property
+    def is_end(self):
+        return self._is_end
+
+    def set_as_end(self):
+        self._is_end = True
+        return self
+
+    def is_deadend(self):
+        return len(neighbors) == 1 # Can only go backwards
 
     def __eq__(self, other):
-        return self.name == other.name and self.index == other.index
+        return self.index == other.index and self.neighbors == other.neighbors
 
-    def __lt__(self, other):
-        return self.index < other.index
-
-    def __gt__(self, other):
-        return self.index > other.index
-
-class Edge:
-    def __init__(self, length, node1, node2):
-        self._length = length 
-        self._node1  = node1 
-        self._node2  = node2
-
-    @property
-    def length(self):
-        return self._length
-    @property
-    def node1(self):
-        return self._node1
-    @property
-    def node2(self):
-        return self._node2
-
-    def __eq__(self, other):
-        return other.length == self.length and other.node1 == self.node1 and other.node2 == self.node2
+    def __str__(self):
+        return '{0}: {1}'.format(self.index, str(self.neighbors))
 
 class Graph: 
-    def __init__(self, V=None, E=None, v_names=None, nextIndex=0):
-        self._nextIndex = nextIndex
-        if V is None:
-            self._V         = {}
-        else:
-            self._V         = V          # Dictionary of {Index:Node} 
-        if v_names is None:
-            self._V_names   = {}
-        else:
-            self._V_names   = v_names    # Dictionary of {Name :Node}
-        if E is None:
-            self._E         = []         
-        else:
-            self._E         = E          # List of Edge(u, v), u.index < v.index (always)
+    def __init__(self, V={}, next_index=0):
+        self._next_index = next_ndex
+        self._V         = V
 
     @property
     def nextIndex(self):
-        return self._nextIndex
+        return self._next_index
     @property
     def V(self):
         return self._V
-    @property
-    def E(self):
-        return self._E
-
-    @property
-    def V_names(self):
-        return self._V_names
 
     # Pass in the name of the node or a node to add to the graph
-    def add_node(self, arg=None):
-        if isinstance(arg, Node):
-            node = arg
-        else:
-            name = arg
-            node                     = Node(name, self.nextIndex) 
-        self._V[node.index]      = node
-        self._V_names[node.name] = node
-        self._nextIndex          += 1
+    def add_node(self):
+        node = Node(self.next_index)
+        self._V[self.next_index] = node
+        self._next_index += 1
         return node
 
-    def add_edge(self, node1, node2, length):
-        if node1.index < node2.index:
-            self._E += [Edge(length, node1, node2)]
-        else:
-            self._E += [Edge(length, node2, node1)]
-        return self._E[-1] # The last added edge
-
-    def remove_edge(self, node1, node2):
-        edge = self.get_edge(node1, node2)
-        self._E.remove(edge)
+    def get_node(self, index):
+        return self.V[index]
 
     def get_neighbors(self, node):
-        neighbors = []
-        for edge in self.E:
-            if node == edge.node1:
-                neighbors += [edge.node2]
-            elif node == edge.node2:
-                neighbors += [edge.node1]
-        return neighbors
-
-    def get_edge(self, node1, node2):
-        smaller_node = min(node1, node2)
-        larger_node  = max(node1, node2)
-        for edge, i in zip(self._E, range(len(self._E))) :
-            if edge.node1 is smaller_node and edge.node2 is larger_node:
-                return edge
-
-    def get_node(self, name):
-        return self._V_names.get(name)
+        return node.neighbors
 
     def breadth_first_search(self):
         pass
