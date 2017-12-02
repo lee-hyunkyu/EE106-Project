@@ -4,6 +4,41 @@ import string
  
 class TestGraph(unittest.TestCase):
 
+    def setUp(self):
+        g = Graph()
+        n1 = g.add_node()
+        n2 = g.add_node()
+        n3 = g.add_node()
+        n4 = g.add_node()
+        n5 = g.add_node()
+        n6 = g.add_node()
+        n7 = g.add_node()
+        n8 = g.add_node()
+        n9 = g.add_node()
+
+        # Imagine a configuration similar to a telephone numpad
+        north = Direction.NORTH()
+        east  = Direction.EAST()
+        south = Direction.SOUTH()
+        west  = Direction.WEST()
+
+        n1.add_neighbor(n2, east)
+        n1.add_neighbor(n4, south)
+        n2.add_neighbor(n3, east)
+        n2.add_neighbor(n5, south)
+        n3.add_neighbor(n6, south)
+
+        n4.add_neighbor(n5, east)
+        n4.add_neighbor(n7, south)
+        n5.add_neighbor(n6, east)
+        n5.add_neighbor(n8, south)
+        n6.add_neighbor(n9, south)
+
+        n7.add_neighbor(n8, east)
+        n8.add_neighbor(n5, north)
+        n8.add_neighbor(n9, east)
+        self.g = g
+
     def test_direction(self):
         south = Direction.SOUTH()
         east  = Direction.EAST()
@@ -313,7 +348,6 @@ class TestGraph(unittest.TestCase):
         # Run Dijkstra's
         nodes = [n1, n2, n3, n4, n5, n6, n7, n8, n9]
         distances, prevs = g.dijkstras(n1)
-        import pdb; pdb.set_trace()
         self.assertTrue(distances[n1] == 0)
         self.assertTrue(distances[n2] == 1)
         self.assertTrue(distances[n3] == 2)
@@ -326,6 +360,27 @@ class TestGraph(unittest.TestCase):
 
     # def test_find_min_path(self):
     #     pass
+
+    def test_get_node_via_turns(self):
+        north = Direction.NORTH()
+        east  = Direction.EAST()
+        south = Direction.SOUTH()
+        west  = Direction.WEST()
+        
+        end_node = self.g.get_node_via_turns([east, south])
+        self.assertTrue(self.g.get_node(4) == end_node)
+
+        end_node = self.g.get_node_via_turns([east, south, south])
+        self.assertTrue(self.g.get_node(7) == end_node)
+
+        end_node = self.g.get_node_via_turns([east, south, east, south])
+        self.assertTrue(self.g.get_node(8) == end_node)
+
+        end_node = self.g.get_node_via_turns([east, south, north, north])
+        self.assertTrue(end_node is None)
+
+        end_node = self.g.get_node_via_turns([east, south, west, south, west, north, north, east, south, east, north], start=1)
+        self.assertTrue(self.g.get_node(2) == end_node)
 
 if __name__ == '__main__':
     unittest.main()

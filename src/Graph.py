@@ -140,6 +140,12 @@ class Node:
     def __hash__(self):
         return self.index
 
+    def __str__(self):
+        rep = str(self.index) + '\n'
+        for dir, n in self.neighbors.items():
+            rep += str(dir) + ' ' + str(n.index) + '\n'
+        return rep
+
 class Graph: 
     def __init__(self, V=None, next_index=0):
         self._next_index = next_index
@@ -204,6 +210,24 @@ class Graph:
 
     def find_min_path(self, u, v):
         pass
+
+    def get_nodes(self):
+        return self._V.values()
+
+    def get_indices(self):
+        return self._V.keys()
+
+    def get_index_node(self):
+        return self._V.items()
+
+    def get_node_via_turns(self, directions, start=0):
+        curr_node = self.get_node(start)
+        for dir in directions:
+            curr_node = curr_node.neighbors[dir]
+            if not curr_node:
+                return None
+        return curr_node
+
 
 if __name__ == '__main__':
     a = Graph()
