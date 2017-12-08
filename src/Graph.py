@@ -228,6 +228,5 @@ class Graph:
                 return None
         return curr_node
 
-
 if __name__ == '__main__':
     a = Graph()

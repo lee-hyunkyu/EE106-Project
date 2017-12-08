@@ -11,7 +11,7 @@
 [ ] Figure out how to send commands to have the robot turn and move
 [ ] move_forward_ntil_next_node
 [ ] move_to_node
-[ ] is_hear_node
+[ ] is_near_node
 
 
 ### Graph

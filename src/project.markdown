@@ -102,3 +102,5 @@ def is_node(homograph):
     Case 4: No corner (0 corners)
         return False
 ~~~
+
+Turning
