@@ -1,0 +1,2 @@
+maze
+-DCATKIN_DEVEL_PREFIX=/home/cc/ee106a/fa17/class/ee106a-acv/FinalProject/devel -DCMAKE_INSTALL_PREFIX=/home/cc/ee106a/fa17/class/ee106a-acv/FinalProject/install -G Unix Makefiles

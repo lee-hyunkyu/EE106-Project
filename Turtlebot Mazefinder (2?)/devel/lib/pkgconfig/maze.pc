@@ -1,0 +1,8 @@
+prefix=/home/cc/ee106a/fa17/class/ee106a-acv/FinalProject/devel
+
+Name: maze
+Description: Description of maze
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/cc/ee106a/fa17/class/ee106a-acv/FinalProject/devel/lib 
+Requires: 
